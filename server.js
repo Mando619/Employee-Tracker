@@ -39,15 +39,9 @@ connection.connect(function (err) {
 function startToDo() {
     inquirer.prompt([
         {
-            type: "list"
-        },
-        {
-            name: "todo"
-        },
-        {
-            message: "What would you like to do?"
-        },
-        {
+            type: "list",
+            name: "todo",
+            message: "What would you like to do?",
             choices: [
                 "View all employees",
                 "View all employees by department",
@@ -98,12 +92,12 @@ async function newEmployee() {
         {
             type: "input",
             name: "firstName",
-            message: "What is your employee's first name?"
+            message: "What is the employee's first name?"
         },
         {
             type: "input",
             name: "lastName",
-            message: "What is your employee's last name?"
+            message: "What is the employee's last name?"
         },
         {
             type: "input",
@@ -127,21 +121,26 @@ async function newEmployee() {
          connection.query(
                 "INSERT INTO employee SET ?",
                {
-                    first_name = employee.firstName,
-                    last_name = employee.lastName,
-                    role_id = employee.roleId,
-                    manager_id = employee.managerId 
+                    first_name: employee.firstName,
+                    last_name: employee.lastName,
+                    role_id: employee.roleId,
+                    manager_id: employee.managerId 
               },
                      function (error) {
                     if (error) throw error;
-                    startToDo();
+                    //startToDo();
                     connection.end();
                 });
-    
     }
     
+    function viewEmployees() {
+        connection.query(
+            "SELECT * FROM employee",
+            function(error, data)
+            console.log.(data);
+            startToDo();
     
-
+    }
 
 
                 // use async return promises to recieve responses? and put into database?
