@@ -55,7 +55,7 @@ function startToDo() {
         //use case switch? make it easier with and cleaner code. 
     ]).then(function (response) {
         switch (response.todo) {
-            case "Add an employee?":
+            case "Add employee":
                 newEmployee();
                 break;
 
@@ -87,8 +87,8 @@ function startToDo() {
     })
 }
 
-async function newEmployee() {
-    const employeeResponses = await inquirer.prompt([
+        function newEmployee() {
+             inquirer.prompt([
         {
             type: "input",
             name: "firstName",
@@ -111,37 +111,30 @@ async function newEmployee() {
         }
 
 
-    ]);
-    
-    var employee = { 
-        firstName: employeeResponses[0].name, 
-        lastName: employeeResponses[1].name, 
-        roleId: employeeResponses[2].name, 
-        managerId: employeeResponses[3].name}
+    ]).then(function(response){
          connection.query(
-                "INSERT INTO employee SET ?",
-               {
-                    first_name: employee.firstName,
-                    last_name: employee.lastName,
-                    role_id: employee.roleId,
-                    manager_id: employee.managerId 
+               "INSERT INTO employee SET ?",
+              {
+                   first_name: response.firstName,
+                   last_name: response.lastName,
+                   role_id: response.roleId,
+                   manager_id: response.managerId 
               },
                      function (error) {
-                    if (error) throw error;
-                    //startToDo();
-                    connection.end();
-                });
-    }
-    
-    function viewEmployees() {
-        connection.query(
-            "SELECT * FROM employee",
-            function(error, data)
-            console.log.(data);
-            startToDo();
-    
-    }
+                   if (error) throw error;
+                    startToDo();
+                     }
+                );
+        });
+        }
+    //   var employee = { 
+    //    firstName: employeeResponses[0].name, 
+   //     lastName: employeeResponses[1].name, 
+   //    roleId: employeeResponses[2].name, 
+   //    managerId: employeeResponses[3].name}
+   // function viewDepartment( {
 
+   // })
 
                 // use async return promises to recieve responses? and put into database?
 
