@@ -141,7 +141,9 @@ function newRole() {
                 "Sales Lead",
                 "Accountant",
                 "Softwear Engineer",
-                "Lead Engineer"
+                "Lead Engineer",
+                "Lawyer",
+                "Legal Team Lead",
             ]
         },
         {
@@ -188,6 +190,7 @@ function newDepartment() {
                 "Sales",
                 "Engineering",
                 "Finance",
+                "Legal",
             ]
         },
     ]).then(function (response) {
@@ -214,8 +217,8 @@ function newDepartment() {
 
 function viewEmployees() {
     connection.query(
-        "SELECT * from employee",
-        function (error, data) {
+       "SELECT employee.id, first_name, last_name, name AS department, title, salary, manager_id FROM employee JOIN role ON employee.role_id = role_id JOIN department ON role.department_id = department.id ORDER BY employee.id",
+         function (error, data) {
             console.table(data);
             startToDo();
         }
@@ -223,7 +226,7 @@ function viewEmployees() {
 }
 function viewRole() {
     connection.query(
-        "SELECT * FROM role",
+        "SELECT first_name, last_name, title, salary FROM employee JOIN role ON role_id = role.id",
         function (error, data) {
             console.table(data);
             startToDo();
@@ -233,7 +236,7 @@ function viewRole() {
 
 function viewDepartment() {
     connection.query(
-        "SELECT * FROM department",
+        "SELECT first_name, last_name, name AS department FROM employee JOIN role ON role_id = role.id JOIN department ON department_id = department.id ORDER BY employee.id",
         function (error, data) {
             console.table(data);
             startToDo();
