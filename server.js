@@ -34,14 +34,12 @@ connection.connect(function (err) {
     startToDo();
 });
 
-
-
 function startToDo() {
     inquirer.prompt([
         {
             type: "list",
             name: "todo",
-            message: "What would you like to do?",
+            message: "Hello! What would you like to do?",
             choices: [
                 "View all employees",
                 "View all employees by department",
@@ -59,23 +57,23 @@ function startToDo() {
                 newEmployee();
                 break;
 
-            case "Add a role?":
+            case "Add role":
                 newRole();
                 break;
 
-            case "Add a department?":
+            case "Add department":
                 newDepartment();
                 break;
 
-            case "View all Employees?":
+            case "View all employees":
                 viewEmployees();
                 break;
 
-            case "View all employees by department?":
+            case "View all employees by department":
                 viewDepartment();
                 break;
 
-            case "View all employees by role?":
+            case "View all employees by role":
                 viewRole();
                 break;
 
@@ -87,8 +85,8 @@ function startToDo() {
     })
 }
 
-        function newEmployee() {
-             inquirer.prompt([
+function newEmployee() {
+    inquirer.prompt([
         {
             type: "input",
             name: "firstName",
@@ -111,22 +109,127 @@ function startToDo() {
         }
 
 
-    ]).then(function(response){
-         connection.query(
-               "INSERT INTO employee SET ?",
-              {
-                   first_name: response.firstName,
-                   last_name: response.lastName,
-                   role_id: response.roleId,
-                   manager_id: response.managerId 
-              },
-                     function (error) {
-                   if (error) throw error;
-                    startToDo();
-                     }
-                );
-        });
+    ]).then(function (response) {
+        connection.query(
+            "INSERT INTO employee SET ?",
+            {
+                first_name: response.firstName,
+                last_name: response.lastName,
+                role_id: response.roleId,
+                manager_id: response.managerId
+            },
+            function (error) {
+                if (error) throw error;
+                startToDo();
+            }
+        );
+    });
+}
+
+function newRole() {
+    inquirer.prompt([
+        {
+            type: "list",
+            name: "title",
+            message: "What is the title of the employee?",
+            choices: [
+                "Sales Person",
+                "Sales Lead",
+                "Accountant",
+                "Softwear Engineer",
+                "Lead Engineer"
+            ]
+        },
+        {
+            type: "input",
+            name: "salary",
+            message: "What is the employees salary?",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        },
+
+        {
+            type: "input",
+            name: "departmentId",
+            message: "What is the employees department id?"
+        },
+
+    ]).then(function (response) {
+        connection.query(
+            "INSERT INTO role SET ?",
+            {
+                title: response.title,
+                salary: response.salary,
+                department_id: response.departmentId
+            },
+            function (error) {
+                if (error) throw error;
+                startToDo();
+            }
+        )
+    })
+}
+
+function newDepartment() {
+    inquirer.prompt([
+        {
+            type: "list",
+            name: "department",
+            message: "What department is this employee in?",
+            choices: [
+                "Sales",
+                "Engineering",
+                "Finance",
+            ]
+        },
+    ]).then(function (response) {
+        connection.query(
+            "INSERT INTO department SET ?",
+            {
+                name: response.department
+            },
+            function (error) {
+                if (error) throw error;
+                startToDo();
+            }
+        )
+    })
+}
+
+function viewEmployees() {
+    connection.query(
+        "SELECT * FROM employee",
+        function (error, data) {
+            console.table(data);
+            startToDo();
         }
+    )
+}
+
+function viewRole() {
+    connection.query(
+        "SELECT * FROM role",
+        function(error, data) {
+            console.table(data);
+            startToDo();
+        }
+    )
+}
+
+function viewDepartment() {
+    connection.query(
+        "SELECT * FROM department",
+        function(error, data) {
+            console.table(data);
+            startToDo();
+        }
+    )
+}
+
     //   var employee = { 
     //    firstName: employeeResponses[0].name, 
    //     lastName: employeeResponses[1].name, 
