@@ -77,6 +77,10 @@ function startToDo() {
                 viewRole();
                 break;
 
+            case "Update employee role":
+                updateRole();
+                break;
+
             case "Exit":
                 connection.end();
                 break;
@@ -200,20 +204,27 @@ function newDepartment() {
     })
 }
 
+//function updateRole() {
+   // connection.query(
+      ///  "UPDATE role SET ? WHERE ?",
+
+   /// )
+//}
+
+
 function viewEmployees() {
     connection.query(
-        "SELECT * FROM employee",
+        "SELECT * from employee",
         function (error, data) {
             console.table(data);
             startToDo();
         }
     )
 }
-
 function viewRole() {
     connection.query(
         "SELECT * FROM role",
-        function(error, data) {
+        function (error, data) {
             console.table(data);
             startToDo();
         }
@@ -223,7 +234,7 @@ function viewRole() {
 function viewDepartment() {
     connection.query(
         "SELECT * FROM department",
-        function(error, data) {
+        function (error, data) {
             console.table(data);
             startToDo();
         }
