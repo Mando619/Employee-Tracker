@@ -138,47 +138,67 @@ function newEmployee() {
 }
 
 function newRole() {
-    inquirer.prompt([
-        {
-            type: "list",
-            name: "title",
-            message: "What is the title of the employee?",
-            choices: [
-                "Sales Person",
-                "Sales Lead",
-                "Accountant",
-                "Softwear Engineer",
-                "Lead Engineer",
-                "Lawyer",
-                "Legal Team Lead",
-            ]
-        },
-        {
-            type: "input",
-            name: "salary",
-            message: "What is the employees salary?",
-            validate: function (value) {
-                if (isNaN(value) === false) {
-                    return true;
-                }
-                return false;
-            }
-        },
+    connection.query(
+        "SELECT name, id FROM department",
+        function (error, response) {
+            if (error) throw error;
 
-    ]).then(function (response) {
-        connection.query(
-            "INSERT INTO role SET ?",
-            {
-                title: response.title,
-                salary: response.salary,
-                department_id: response.departmentId
-            },
-            function (error) {
-                if (error) throw error;
-                startToDo();
-            }
-        )
-    })
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: "title",
+                    message: "What is the title of the employee?",
+                    choices: [
+                        "Sales Person",
+                        "Sales Lead",
+                        "Accountant",
+                        "Softwear Engineer",
+                        "Lead Engineer",
+                        "Lawyer",
+                        "Legal Team Lead",
+                    ]
+                },
+                {
+                    type: "input",
+                    name: "salary",
+                    message: "What is the employees salary?",
+                    validate: function (value) {
+                        if (isNaN(value) === false) {
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+                {
+                    // make into a list with choices and return integer
+                    type: "list",
+                    name: "departmentId",
+                    message: "What is the new employee's department?",
+                    choices: response.map((department) => {
+                        return {
+                            name: department.name,
+                            value: department.id
+                        }
+                    })
+                },
+
+
+
+            ]).then(function (response) {
+                connection.query(
+                    "INSERT INTO role SET ?",
+                    {
+                        title: response.title,
+                        salary: response.salary,
+                        department_id: response.departmentId
+                    },
+                    function (error) {
+                        if (error) throw error;
+                        startToDo();
+                    }
+                )
+            })
+        })
 }
 
 function newDepartment() {
@@ -209,46 +229,46 @@ function newDepartment() {
 }
 
 function updateRole() {
- connection.query(
-     "SELECT title, id FROM role",
-     function(error, response) {
-         if (error) throw error;
-         inquirer.prompt([
-             {
-                 type: "list",
-                 name: "id",
-                 message: "What role would you like to update?",
-                 choices: response.map((employee) => {
-                     return {
-                         name: employee.name,
-                         value: employee.id
-                     };
-                 })
-             },
-             {
-                 type: "list",
-                 name: "roleId",
-                 message: "What is the employee's new role?",
-                 choices: response.map((role) => {
-                     return {
-                         name: role.title,
-                         value: role.id
-                     };
-                 })
-             }
-         ]).then(function(response) {
-             connection.query(
-                 "UPDATE employee SET role_id = ? WHERE id = ?",
-                 [response.roleId, response.id],
-                 function( error, response) {
-                     if (error) throw error
-                     console.log("Employee's role has been updated!" + response.affectRows + "the row has changed")
-                     startToDo();
-                 }
-             )
-         })
-     }
- )
+    connection.query(
+        "SELECT title, id FROM role",
+        function (error, response) {
+            if (error) throw error;
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: "id",
+                    message: "What role would you like to update?",
+                    choices: response.map((employee) => {
+                        return {
+                            name: employee.name,
+                            value: employee.id
+                        };
+                    })
+                },
+                {
+                    type: "list",
+                    name: "roleId",
+                    message: "What is the employee's new role?",
+                    choices: response.map((role) => {
+                        return {
+                            name: role.title,
+                            value: role.id
+                        };
+                    })
+                }
+            ]).then(function (response) {
+                connection.query(
+                    "UPDATE employee SET role_id = ? WHERE id = ?",
+                    [response.roleId, response.id],
+                    function (error, response) {
+                        if (error) throw error
+                        console.log("Employee's role has been updated!" + response.affectRows + "the row has changed")
+                        startToDo();
+                    }
+                )
+            })
+        }
+    )
 }
 
 function viewEmployees() {
@@ -281,6 +301,6 @@ function viewDepartment() {
     )
 }
 
-    
-   
+
+
 
