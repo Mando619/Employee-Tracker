@@ -22,7 +22,6 @@ const connectionConfig = {
 
 // connection.connect(function(){
 // connection.query(
-//})
 //  function(error, date) {}
 // )
 
@@ -47,6 +46,7 @@ function startToDo() {
                 "Add employee",
                 "Add role",
                 "Add department",
+                "Update employee role",
                 "Exit",
             ]
         }
@@ -90,44 +90,51 @@ function startToDo() {
 }
 
 function newEmployee() {
-    inquirer.prompt([
-        {
-            type: "input",
-            name: "firstName",
-            message: "What is the employee's first name?"
-        },
-        {
-            type: "input",
-            name: "lastName",
-            message: "What is the employee's last name?"
-        },
-        {
-            type: "input",
-            name: "roleId",
-            message: "What is the employee's role id?"
-        },
-        {
-            type: "input",
-            name: "managerId",
-            message: "What is the managers id?"
-        }
+    connection.query(
+        "SELECT title, id FROM role",
+        function (error, response) {
+            if (error) throw error;
 
+            inquirer.prompt([
+                {
+                    type: "input",
+                    name: "firstName",
+                    message: "What is the employee's first name?"
+                },
+                {
+                    type: "input",
+                    name: "lastName",
+                    message: "What is the employee's last name?"
+                },
+                {
+                    // make into a list with choices and return integer
+                    type: "list",
+                    name: "roleId",
+                    message: "What is the new employee's role?",
+                    choices: response.map((role) => {
+                        return {
+                            name: role.title,
+                            value: role.id
+                        }
+                    })
+                },
 
-    ]).then(function (response) {
-        connection.query(
-            "INSERT INTO employee SET ?",
-            {
-                first_name: response.firstName,
-                last_name: response.lastName,
-                role_id: response.roleId,
-                manager_id: response.managerId
-            },
-            function (error) {
-                if (error) throw error;
-                startToDo();
-            }
-        );
-    });
+            ]).then(function (response) {
+                connection.query(
+                    "INSERT INTO employee SET ?",
+                    {
+                        first_name: response.firstName,
+                        last_name: response.lastName,
+                        role_id: response.roleId,
+
+                    },
+                    function (error) {
+                        if (error) throw error;
+                        startToDo();
+                    }
+                )
+            })
+        })
 }
 
 function newRole() {
@@ -156,12 +163,6 @@ function newRole() {
                 }
                 return false;
             }
-        },
-
-        {
-            type: "input",
-            name: "departmentId",
-            message: "What is the employees department id?"
         },
 
     ]).then(function (response) {
@@ -207,23 +208,59 @@ function newDepartment() {
     })
 }
 
-//function updateRole() {
-   // connection.query(
-      ///  "UPDATE role SET ? WHERE ?",
-
-   /// )
-//}
-
+function updateRole() {
+ connection.query(
+     "SELECT title, id FROM role",
+     function(error, response) {
+         if (error) throw error;
+         inquirer.prompt([
+             {
+                 type: "list",
+                 name: "id",
+                 message: "What role would you like to update?",
+                 choices: response.map((employee) => {
+                     return {
+                         name: employee.name,
+                         value: employee.id
+                     };
+                 })
+             },
+             {
+                 type: "list",
+                 name: "roleId",
+                 message: "What is the employee's new role?",
+                 choices: response.map((role) => {
+                     return {
+                         name: role.title,
+                         value: role.id
+                     };
+                 })
+             }
+         ]).then(function(response) {
+             connection.query(
+                 "UPDATE employee SET role_id = ? WHERE id = ?",
+                 [response.roleId, response.id],
+                 function( error, response) {
+                     if (error) throw error
+                     console.log("Employee's role has been updated!" + response.affectRows + "the row has changed")
+                     startToDo();
+                 }
+             )
+         })
+     }
+ )
+}
 
 function viewEmployees() {
     connection.query(
-       "SELECT employee.id, first_name, last_name, name AS department, title, salary, manager_id FROM employee JOIN role ON employee.role_id = role_id JOIN department ON role.department_id = department.id ORDER BY employee.id",
-         function (error, data) {
+        "SELECT employee.id, first_name, last_name, name AS department, title, salary, manager_id FROM employee JOIN role ON role_id = role.id JOIN department ON department_id = department.id ORDER BY employee.id",
+        function (error, data) {
             console.table(data);
             startToDo();
         }
     )
 }
+
 function viewRole() {
     connection.query(
         "SELECT first_name, last_name, title, salary FROM employee JOIN role ON role_id = role.id",
@@ -244,14 +281,6 @@ function viewDepartment() {
     )
 }
 
-    //   var employee = { 
-    //    firstName: employeeResponses[0].name, 
-   //     lastName: employeeResponses[1].name, 
-   //    roleId: employeeResponses[2].name, 
-   //    managerId: employeeResponses[3].name}
-   // function viewDepartment( {
-
-   // })
-
-                // use async return promises to recieve responses? and put into database?
+    
+   
 

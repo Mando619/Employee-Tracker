@@ -1,31 +1,4 @@
-DROP DATABASE IF EXISTS employee_trackerdb;
 
-CREATE DATABASE employee_trackerdb;
-
-USE  employee_trackerdb;
-
-CREATE TABLE department (
-  id INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR(30) NOT NULL,
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE role (
-id INT NOT NULL AUTO_INCREMENT,
-title VARCHAR(30) NOT NULL,
-salary DECIMAL(10,2) NOT NULL,
-department_id INT NOT NULL,
-PRIMARY KEY (id)
-);
-
-CREATE TABLE employee (
-id INT NOT NULL AUTO_INCREMENT,
-first_name VARCHAR(30) NOT NULL, 
-last_name VARCHAR(30) NOT NULL,
-role_id INT NOT NULL,
-manager_id INT NULL,
-PRIMARY KEY (id)
-);
 
 INSERT INTO role (title, salary, department_id)
 VALUE ("Lead Engineer", 100000, 2);
@@ -76,13 +49,14 @@ VALUE ("Legal");
 
 
 
+SELECT first_name, last_name, name AS department 
+FROM employee JOIN role ON role_id = role.id 
+JOIN department ON department_id = department.id
+ORDER BY employee.id;
 
-SELECT id, first_name, last_name, department.name, role.title 
+
+SELECT employee.id, first_name, last_name, name AS department, title, salary, manager_id
  FROM employee JOIN role
  ON employee.role_id = role.id 
  JOIN department ON role.department_id = department.id
  ORDER BY employee.id;
-
- SELECT first_name, last_name, title AS title 
- FROM employee JOIN 
- role ON employee.id = role.id;
