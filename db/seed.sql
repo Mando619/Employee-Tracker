@@ -1,5 +1,3 @@
-
-
 INSERT INTO role (title, salary, department_id)
 VALUE ("Lead Engineer", 100000, 2);
 INSERT INTO role (title, salary, department_id)
