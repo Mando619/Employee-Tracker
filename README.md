@@ -4,12 +4,12 @@
 
 ## Description
 
-Employee tracker is a CLI application for building and to help maintain 
+Employee tracker is a CLI application for building and maintaining 
 a companys employee data base. The data base is built and updated through MYSQL.
 With many companys growing, this application can help change 
 the structure of the employee database without having to change the main model.
-This tracker allows an company individual to view all employees, departments, and roles.
-Through the CLI, user is able to modify each aspect of the employee.
+This tracker allows a company individual to view all employees, departments, and roles.
+Through the CLI, user is able to modify each aspect of the employee, or add new ones.
 
 ## DEMO 
 
@@ -20,7 +20,7 @@ Through the CLI, user is able to modify each aspect of the employee.
 
 ## Installation 
 
-Npm will be need installation for this. You can do so by installing in your CLI. Once finished,
+Npm will need installation . You can do so by installing it in in your CLI. Once finished,
 use your node server.js in the CLI to begin everything.
 
 ## Technologies Used

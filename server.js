@@ -112,6 +112,17 @@ function newEmployee() {
                         }
                     })
                 },
+                {
+                    type: "list",
+                    name: "manageId",
+                    message: "Who is this new employee's manager?",
+                    choices: response.map((employee) => {
+                        return {
+                            name: employee.name,
+                            value: employee.id
+                        }
+                    })
+                },
 
             ]).then(function (response) {
                 connection.query(
@@ -120,7 +131,7 @@ function newEmployee() {
                         first_name: response.firstName,
                         last_name: response.lastName,
                         role_id: response.roleId,
-
+                        manager_id: response.managerId,
                     },
                     function (error) {
                         if (error) throw error;
@@ -275,7 +286,6 @@ function viewDepartment() {
         }
     )
 }
-
 
 
 
