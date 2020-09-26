@@ -19,20 +19,14 @@ const connectionConfig = {
     database: "employee_trackerdb"
 };
 
-
-// connection.connect(function(){
-// connection.query(
-//  function(error, date) {}
-// )
-
 const connection = mysql.createConnection(connectionConfig);
 
-
+// connection start, and the start of prompt
 connection.connect(function (err) {
     if (err) throw err
     startToDo();
 });
-
+// first prompt to initiate all possible prompts
 function startToDo() {
     inquirer.prompt([
         {
@@ -142,21 +136,11 @@ function newRole() {
         "SELECT name, id FROM department",
         function (error, response) {
             if (error) throw error;
-
             inquirer.prompt([
                 {
-                    type: "list",
-                    name: "title",
-                    message: "What is the title of the employee?",
-                    choices: [
-                        "Sales Person",
-                        "Sales Lead",
-                        "Accountant",
-                        "Softwear Engineer",
-                        "Lead Engineer",
-                        "Lawyer",
-                        "Legal Team Lead",
-                    ]
+                    type: "input",
+                    name: "role",
+                    message: "What is the new role you would like to add?"
                 },
                 {
                     type: "input",
@@ -170,10 +154,10 @@ function newRole() {
                     }
                 },
                 {
-                    // make into a list with choices and return integer
+                    // make into a list with choices and return 
                     type: "list",
                     name: "departmentId",
-                    message: "What is the new employee's department?",
+                    message: "What is the new roles department?",
                     choices: response.map((department) => {
                         return {
                             name: department.name,
@@ -182,13 +166,11 @@ function newRole() {
                     })
                 },
 
-
-
             ]).then(function (response) {
                 connection.query(
                     "INSERT INTO role SET ?",
                     {
-                        title: response.title,
+                        role: response.role,
                         salary: response.salary,
                         department_id: response.departmentId
                     },
@@ -204,16 +186,10 @@ function newRole() {
 function newDepartment() {
     inquirer.prompt([
         {
-            type: "list",
+            type: "input",
             name: "department",
-            message: "What department is this employee in?",
-            choices: [
-                "Sales",
-                "Engineering",
-                "Finance",
-                "Legal",
-            ]
-        },
+            message: "What is the new department you would like to add?",
+        }  
     ]).then(function (response) {
         connection.query(
             "INSERT INTO department SET ?",
