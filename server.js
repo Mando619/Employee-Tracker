@@ -238,7 +238,6 @@ function updateRole() {
                     [response.roleId, response.id],
                     function (error, response) {
                         if (error) throw error
-                        console.log("Employee's role has been updated!" + response.affectRows + "the row has changed")
                         startToDo();
                     }
                 )
