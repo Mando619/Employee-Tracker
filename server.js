@@ -114,7 +114,7 @@ function newEmployee() {
                 },
                 {
                     type: "list",
-                    name: "manageId",
+                    name: "managerId",
                     message: "Who is this new employee's manager?",
                     choices: response.map((employee) => {
                         return {
